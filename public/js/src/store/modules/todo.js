@@ -9,7 +9,6 @@ const actions = {
   getAllTodos({ commit }) {
     todosServer.getTodos()
       .then((todos) => {
-        console.log('todos', todos);
         const remoteTodos = todos.map(todo => ({ ...todo, id: Date.now() }));
         commit(types.RECEIVE_TODOS, remoteTodos);
       });
@@ -18,7 +17,9 @@ const actions = {
     commit(types.TOGGLE_TODO, todo);
   },
   addTodo({ commit }, text) {
-    commit(types.ADD_TODO, text);
+    todosServer.addTodo(text)
+      .then(() => commit(types.ADD_TODO, text))
+      .catch(err => console.error(err));
   },
 };
 

@@ -1,3 +1,7 @@
 module.exports = {
-    "extends": "airbnb-base"
+    extends: "airbnb-base",
+    plugins: ["vue"],
+    rules: {
+        "no-param-reassign": 0,
+    }
 };

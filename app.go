@@ -12,21 +12,27 @@ import (
 var port = ":8080"
 
 type todo struct {
-	title       string
-	isCompleted bool
+	Title       string `json:"title"`
+	IsCompleted bool   `json:"isCompleted"`
 }
 
-type resp struct {
-	todos []todo
+var todos = []todo{
+	todo{Title: "First Todo", IsCompleted: true},
+	todo{Title: "Second Todo", IsCompleted: false},
 }
 
 func getTodosHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	firstTodo := todo{title: "First todo", isCompleted: false}
-	secondTodo := todo{title: "Second todo", isCompleted: false}
-	recs := &resp{todos: []todo{firstTodo, secondTodo}}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	if err := json.NewEncoder(w).Encode(todos); err != nil {
+		w.WriteHeader(500)
+	}
+}
+
+func addTodoHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	fmt.Print(r.Body)
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	if err := json.NewEncoder(w).Encode(recs); err != nil {
+	if err := json.NewEncoder(w).Encode(todos); err != nil {
 		w.WriteHeader(500)
 	}
 }
@@ -42,6 +48,7 @@ func main() {
 	router := httprouter.New()
 
 	router.GET("/todos", getTodosHandler)
+	// router.PUT("/todos", addTodoHandler)
 	router.GET("/", indexHandler)
 	router.ServeFiles("/public/*filepath", http.Dir("./public"))
 

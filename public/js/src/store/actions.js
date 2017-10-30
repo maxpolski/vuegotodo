@@ -1,6 +1,6 @@
 import * as types from './mutation-types';
 
-export const load = ({ commit }, todo) => {
+export const toggleTodo = ({ commit }, todo) => {
   commit(types.TOGGLE_TODO, {
     todo,
   })
